@@ -72,10 +72,12 @@ def parse_cdl_website(matchID, save: bool =True):
 
 df = pd.read_json('major_ids.json')
 for i in df.keys():
+    print(i)
     for j in df[i].keys():
         for id in df[i][j]:
-            try:
-                parse_cdl_website(int(id))
-            except:
-             pass
+            if not os.path.isfile(f"./data/cdl_{id}.csv"):
+                try:
+                    parse_cdl_website(int(id))
+                except:
+                    pass
 

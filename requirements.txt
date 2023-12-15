@@ -10,3 +10,4 @@ ipykernel==6.16.0
 openpyxl
 configparser
 seaborn
+torch

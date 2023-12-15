@@ -1,0 +1,110 @@
+- Splits based on major? Train M1, Valid Maj2, Test rest
+- Neural Net could be good because its all continous
+- Ablation on the challengers data -> actually, lets do champs data
+
+{
+    Champs:
+
+    11471, 11472, 11473, 11474, 11475, 11476, 11477, 11478, 11480, 11481, 11482, 11483, 11484, 11485
+
+    Major 5:
+        Q - 8809, 8810, 8811, 8782, 8783, 8784, 8785, 8786, 8787, 8788, 8789, 8790, 8791, 8792, 8793, 8794, 8795, 8796, 8797, 8798, 8799, 8800, 8801, 8802, 8803, 8804, 8805, 8806, 8807, 8808
+        T - 11325, 11326, 11327, 11328, 11329, 11330, 11331, 11332, 11334, 11335, 11336, 11337, 11338, 11339, 11341, 11342, 11343
+
+    Major 4: 
+        T - 11216, 11217, 11218, 11219, 11220, 11221, 11222, 11223, 11225, 11226, 11227, 11228, 11229, 11230, 11231, 11232, 11233, 11234
+}
+
+What I did:
+
+    Scraped the remaining data which had not been scrapped. Aggregated said data into a full data set, then broke
+    that down first by game mode, then again by major. This way, I can build a unique model for each game mode, and set up
+    my train, test, valid splits by date. 
+
+Ablation data for desc tree:
+    MODE: Hardpoint
+    Best Params: {'criterion': 'entropy', 'max_depth': None, 'max_features': 20, 'max_leaf_nodes': 10, 'min_samples_leaf': 1, 'min_samples_split': 2}
+    Training Accuracy: 63.18%
+    Validation Accuracy: 68.00%
+    Test Accuracy: 57.34%
+    
+    MODE: Control
+    Best Params: {'criterion': 'gini', 'max_depth': 10, 'max_features': 30, 'max_leaf_nodes': 20, 'min_samples_leaf': 1, 'min_samples_split': 10}
+    Training Accuracy: 70.67%
+    Validation Accuracy: 65.62%
+    Test Accuracy: 60.64%
+    
+    MODE: SnD
+    Best Params: {'criterion': 'gini', 'max_depth': None, 'max_features': 30, 'max_leaf_nodes': 30, 'min_samples_leaf': 4, 'min_samples_split': 10}
+    Training Accuracy: 75.17%
+    Validation Accuracy: 61.74%
+    Test Accuracy: 64.74%
+
+desc tree no ablation:
+MODE: Hardpoint
+    Best Params: {'criterion': 'entropy', 'max_depth': None, 'max_features': 20, 'max_leaf_nodes': 10, 'min_samples_leaf': 1, 'min_samples_split': 2}
+    Training Accuracy: 63.18%
+    Validation Accuracy: 59.32%
+    Test Accuracy: 55.35%
+    
+    MODE: Control
+    Best Params: {'criterion': 'gini', 'max_depth': 10, 'max_features': 30, 'max_leaf_nodes': 20, 'min_samples_leaf': 1, 'min_samples_split': 10}
+    Training Accuracy: 70.67%
+    Validation Accuracy: 59.92%
+    Test Accuracy: 61.35%
+    
+    MODE: SnD
+    Best Params: {'criterion': 'gini', 'max_depth': None, 'max_features': 30, 'max_leaf_nodes': 30, 'min_samples_leaf': 4, 'min_samples_split': 10}
+    Training Accuracy: 75.17%
+    Validation Accuracy: 65.09%
+    Test Accuracy: 64.39%
+
+
+RF: Best Parameters: {'bootstrap': False, 'criterion': 'gini', 'max_depth': None, 'max_features': 'auto', 'max_leaf_nodes': 30, 'min_samples_split': 5, 'n_estimators': 100}
+Hardpoint
+Best Features 34: ['averageSpeed' 'highestStreak' 'untradedDeaths' 'tradedDeaths'
+ 'damageTaken' 'damageHealed' 'tacticalsUsed' 'lethalsUsed'
+ 'percentTimeMoving' 'deadSilenceTime' 'totalKills' 'totalDeaths'
+ 'totalAssists' 'totalScore' 'totalShotsFired' 'totalShotsHit'
+ 'totalShotsHead' 'untradedKills' 'tradedKills' 'totalDamageDealt'
+ 'friendDamage' 'totalTimeAlive' 'totalDistanceTraveled' 'hillTime'
+ 'contestedHillTime' 'totalInVictimFovKills' 'totalFirstBloodKills'
+ 'totalLongshotKills' 'totalPointblankKills' 'totalRevengeKills'
+ 'totalRotationKills' 'totalInAttackerFovKills' 'totalWallbangKills'
+ 'killDeathRatio']
+Best Train Accuracy: 1.0
+Best Validation Accuracy: 0.6363636363636364
+Best Test Accuracy: 0.6173120728929385
+ 
+Best Parameters: {'bootstrap': True, 'criterion': 'gini', 'max_depth': 10, 'max_features': 'auto', 'max_leaf_nodes': None, 'min_samples_split': 2, 'n_estimators': 100}
+Control
+Best Features 35: ['averageSpeed' 'highestStreak' 'untradedDeaths' 'tradedDeaths'
+ 'inapplicableTradedKills' 'inapplicableTradedDeaths' 'damageTaken'
+ 'damageHealed' 'tacticalsUsed' 'lethalsUsed' 'percentTimeMoving'
+ 'deadSilenceTime' 'totalKills' 'totalDeaths' 'totalAssists' 'totalScore'
+ 'totalShotsFired' 'totalShotsHit' 'totalShotsHead' 'untradedKills'
+ 'tradedKills' 'totalDamageDealt' 'friendDamage' 'totalTimeAlive'
+ 'totalDistanceTraveled' 'totalInVictimFovKills' 'totalFirstBloodKills'
+ 'totalLongshotKills' 'totalPointblankKills' 'totalRevengeKills'
+ 'totalInAttackerFovKills' 'totalWallbangKills' 'killDeathRatio'
+ 'totalObjectivesCaptured' 'objectiveTiersContributed']
+Best Train Accuracy: 1.0
+Best Validation Accuracy: 0.6111111111111112
+Best Test Accuracy: 0.5976095617529881
+ 
+Best Parameters: {'bootstrap': True, 'criterion': 'gini', 'max_depth': 20, 'max_features': 'auto', 'max_leaf_nodes': None, 'min_samples_split': 10, 'n_estimators': 100}
+SnD
+Best Features 39: ['averageSpeed' 'highestStreak' 'untradedDeaths' 'tradedDeaths'
+ 'inapplicableTradedKills' 'inapplicableTradedDeaths' 'damageTaken'
+ 'damageHealed' 'tacticalsUsed' 'lethalsUsed' 'percentTimeMoving'
+ 'deadSilenceTime' 'totalKills' 'totalDeaths' 'totalAssists' 'totalScore'
+ 'totalShotsFired' 'totalShotsHit' 'totalShotsHead' 'untradedKills'
+ 'tradedKills' 'totalDamageDealt' 'friendDamage' 'totalTimeAlive'
+ 'totalDistanceTraveled' 'totalAces' 'totalInVictimFovKills'
+ 'totalDefuserKills' 'totalFirstBloodKills' 'totalLongshotKills'
+ 'totalPlanterKills' 'totalPointblankKills' 'totalRevengeKills'
+ 'totalInAttackerFovKills' 'totalWallbangKills' 'killDeathRatio'
+ 'bombsPlanted' 'bombsDefused' 'sneakDefuses']
+Best Train Accuracy: 1.0
+Best Validation Accuracy: 0.6745562130177515
+Best Test Accuracy: 0.6795252225519288
